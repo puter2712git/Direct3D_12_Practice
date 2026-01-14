@@ -29,6 +29,7 @@
     <ClCompile Include="FrameResource.cpp" />
     <ClCompile Include="LandAndWavesApp.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Waves.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Common\Camera.h" />
@@ -42,6 +43,12 @@
     <ClInclude Include="..\..\Common\UploadBuffer.h" />
     <ClInclude Include="FrameResource.h" />
     <ClInclude Include="LandAndWavesApp.h" />
+    <ClInclude Include="Waves.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\color.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -127,7 +134,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\User\ep\repos\DirectXTest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

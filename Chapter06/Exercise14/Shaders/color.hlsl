@@ -38,5 +38,4 @@ float4 PS(VertexOut pin) : SV_Target
     float easedT = EaseInOutCubic(t);
     
     return lerp(pin.Color, float4(1, 1, 1, 1), easedT);
-
 }

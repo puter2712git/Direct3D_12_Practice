@@ -8,7 +8,7 @@ using namespace DirectX;
 struct Vertex
 {
     XMFLOAT3 Pos;
-    XMFLOAT4 Color;
+    XMFLOAT3 Normal;
 };
 
 struct PassConstants
@@ -37,7 +37,7 @@ struct ObjectConstants
 struct FrameResource
 {
 public:
-    FrameResource(ID3D12Device* device, UINT passCount, UINT objectCount, UINT waveVertCount);
+    FrameResource(ID3D12Device* device, UINT passCount, UINT objectCount);
     FrameResource(const FrameResource& rhs) = delete;
     FrameResource& operator=(const FrameResource& rhs) = delete;
     ~FrameResource();
@@ -47,7 +47,6 @@ public:
     std::unique_ptr<UploadBuffer<PassConstants>> PassCB = nullptr;
     std::unique_ptr<UploadBuffer<ObjectConstants>> ObjectCB = nullptr;
 
-    std::unique_ptr<UploadBuffer<Vertex>> WavesVB = nullptr;
-
     UINT64 Fence = 0;
 };
+

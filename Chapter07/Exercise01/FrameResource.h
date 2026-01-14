@@ -37,17 +37,17 @@ struct ObjectConstants
 struct FrameResource
 {
 public:
-    FrameResource(ID3D12Device* device, UINT passCount, UINT objectCount, UINT waveVertCount);
+    FrameResource(ID3D12Device* device, UINT passCount, UINT objectCount);
     FrameResource(const FrameResource& rhs) = delete;
     FrameResource& operator=(const FrameResource& rhs) = delete;
     ~FrameResource();
 
+    // GPU가 명령들을 전부 처리 후에 명령 할당자를 재설정하므로, 프레임마다 할당자가 필요
     Microsoft::WRL::ComPtr<ID3D12CommandAllocator> CmdListAlloc;
 
+    // 상수 버퍼를 참조하는 명령들을 GPU가 정상적으로 처리하기 위해 프레임마다 상수 버퍼가 필요
     std::unique_ptr<UploadBuffer<PassConstants>> PassCB = nullptr;
     std::unique_ptr<UploadBuffer<ObjectConstants>> ObjectCB = nullptr;
-
-    std::unique_ptr<UploadBuffer<Vertex>> WavesVB = nullptr;
 
     UINT64 Fence = 0;
 };

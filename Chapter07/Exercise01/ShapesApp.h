@@ -2,9 +2,9 @@
 
 #include <Common/d3dApp.h>
 #include <Common/MathHelper.h>
-#include <Common/UploadBuffer.h>
+#include <Common/GeometryGenerator.h>
+
 #include "FrameResource.h"
-#include "Waves.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -16,6 +16,7 @@ struct RenderItem
 
     XMFLOAT4X4 World = MathHelper::Identity4x4();
 
+    // Dirty flag (업데이트 여부를 결정)
     int NumFramesDirty = gNumFrameResources;
 
     UINT ObjCBIndex = -1;
@@ -29,19 +30,13 @@ struct RenderItem
     int BaseVertexLocation = 0;
 };
 
-enum class RenderLayer : int
-{
-    Opaque = 0,
-    Count
-};
-
-class LandAndWavesApp : public D3DApp
+class ShapesApp : public D3DApp
 {
 public:
-    LandAndWavesApp(HINSTANCE hInstance);
-    LandAndWavesApp(const LandAndWavesApp& rhs) = delete;
-    LandAndWavesApp& operator=(const LandAndWavesApp& rhs) = delete;
-    ~LandAndWavesApp();
+    ShapesApp(HINSTANCE hInstance);
+    ShapesApp(const ShapesApp& rhs) = delete;
+    ShapesApp& operator=(const ShapesApp& rhs) = delete;
+    ~ShapesApp();
 
     virtual bool Initialize() override;
 
@@ -58,56 +53,52 @@ private:
     void UpdateCamera(const GameTimer& gt);
     void UpdateObjectCBs(const GameTimer& gt);
     void UpdateMainPassCB(const GameTimer& gt);
-    void UpdateWaves(const GameTimer& gt);
 
+    void BuildDescriptorHeaps();
+    void BuildFrameResources();
+    void BuildConstantBufferViews();
     void BuildRootSignature();
     void BuildShadersAndInputLayout();
-    void BuildLandGeometry();
-    void BuildWavesGeometryBuffers();
-    void BuildPSOs();
-    void BuildFrameResources();
+    void BuildShapeGeometry();
     void BuildRenderItems();
+    void BuildPSOs();
     void DrawRenderItems(ID3D12GraphicsCommandList* cmdList, const std::vector<RenderItem*>& ritems);
 
-    float GetHillsHeight(float x, float z) const;
-    XMFLOAT3 GetHillsNormal(float x, float z) const;
-
 private:
+    ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
+    ComPtr<ID3D12DescriptorHeap> mCbvHeap = nullptr;
+    UINT mPassCbvOffset = 0;
+
+    ComPtr<ID3DBlob> mvsByteCode = nullptr;
+    ComPtr<ID3DBlob> mpsByteCode = nullptr;
+
+    std::vector<D3D12_INPUT_ELEMENT_DESC> mInputLayout;
+
     std::vector<std::unique_ptr<FrameResource>> mFrameResources;
     FrameResource* mCurrFrameResource = nullptr;
     int mCurrFrameResourceIndex = 0;
 
-    UINT mCbvSrvDescriptorSize = 0;
-
-    ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
-
-    std::unordered_map<std::string, std::unique_ptr<MeshGeometry>> mGeometries;
-    std::unordered_map<std::string, ComPtr<ID3DBlob>> mShaders;
-    std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs;
-
-    std::vector<D3D12_INPUT_ELEMENT_DESC> mInputLayout;
-
-    RenderItem* mWavesRitem = nullptr;
+    PassConstants mMainPassCB;
 
     std::vector<std::unique_ptr<RenderItem>> mAllRitems;
-    std::vector<RenderItem*> mRitemLayer[(int)RenderLayer::Count];
+    std::vector<RenderItem*> mOpaqueRitems;
 
-    std::unique_ptr<Waves> mWaves;
+    std::unordered_map<std::string, std::unique_ptr<MeshGeometry>> mGeometries;
 
-    PassConstants mMainPassCB;
+    std::unordered_map<std::string, ComPtr<ID3D12PipelineState>> mPSOs;
 
     bool mIsWireframe = false;
 
-    XMFLOAT3 mEyePos = { 0.0f, 0.0f, 0.0f };
+    XMFLOAT4X4 mWorld = MathHelper::Identity4x4();
     XMFLOAT4X4 mView = MathHelper::Identity4x4();
     XMFLOAT4X4 mProj = MathHelper::Identity4x4();
 
-    float mTheta = 1.5f * XM_PI;
-    float mPhi = XM_PIDIV2 - 0.1f;
-    float mRadius = 50.0f;
+    XMFLOAT3 mEyePos = { 0.0f, 0.0f, 0.0f };
 
-    float mSunTheta = 1.25f * XM_PI;
-    float mSunPhi = XM_PIDIV4;
+    float mTheta = 1.5f * XM_PI;
+    float mPhi = 0.2f * XM_PI;
+    float mRadius = 15.0f;
 
     POINT mLastMousePos;
 };
+

@@ -36,16 +36,13 @@
     <ClCompile Include="..\..\Common\MathHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LandAndWavesApp.cpp">
+    <ClCompile Include="SkullApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FrameResource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Waves.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,15 +74,17 @@
     <ClInclude Include="..\..\Common\UploadBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LandAndWavesApp.h">
+    <ClInclude Include="SkullApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FrameResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Waves.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Models\skull.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\color.hlsl">
